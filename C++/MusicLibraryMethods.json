@@ -1,0 +1,23 @@
+[
+   {
+       "method": "addAlbum",
+       "params":[{}],
+       "returns": true
+   },
+   {
+       "method": "removeAlbum", 
+       "params": ["aString"],
+       "returns": true
+   },
+   {
+       "method": "initLibraryFromJsonFile",
+       "params": ["albums.json"],
+       "returns": true
+   },
+   {
+       "method": "toJsonFile",
+       "params": ["albums.json", "string"],
+       "returns": true
+   }
+
+]
