@@ -19,7 +19,7 @@ This example depends on the following frameworks:
 To build and run the example, you will need to have Ant installed on
 your system, with the antlib target extensions
 
-####nRun the server with the command:
+#### Run the server with the command:
 `ant server -DhostId=localhost -DregPort=1099`
 
 #### Run the client with the command:
