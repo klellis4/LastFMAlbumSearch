@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="g++ noversion nomachine -std=c++14 -c -I../../../../../../usr/include -I../../../../../../usr/include/jsoncpp -I../../../../../../usr/local/include">
+      <target file="MusicLibrary.o" lastModified="1706b940876">
+         <source file="../../src/server/MusicLibrary.cpp" lastModified="17066c40233"/>
+      </target>
+      <target file="Album.o" lastModified="1706b93f536">
+         <source file="../../src/server/Album.cpp" lastModified="17066c5f787"/>
+      </target>
+      <target file="MusicBrowser.o" lastModified="1709d27f9c1">
+         <source file="../../src/client/MusicBrowser.cpp" lastModified="1709d160885"/>
+      </target>
+      <target file="Track.o" lastModified="1706b93f8b2">
+         <source file="../../src/server/Track.cpp" lastModified="17066cbc0ff"/>
+      </target>
+   </processor>
+</history>

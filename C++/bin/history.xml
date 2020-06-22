@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="gcc -L../../../../../../../usr/local/lib -lcurlpp -lstdc++ -lcurl -ljsoncpp -lpthread -ljsonrpccpp-server -ljsonrpccpp-common -lmicrohttpd">
+      <target file="musicRPCServer" lastModified="1709d279f39">
+         <source file="../../../../../../../usr/local/lib/libcurlpp.a" lastModified="170177c7b98"/>
+         <source file="../../../../../../../usr/local/lib/libcurlpp.so.1.0.0" lastModified="170177c9308"/>
+         <source file="server/Album.o" lastModified="1706b8bb4da"/>
+         <source file="server/Track.o" lastModified="1706b8bb68a"/>
+         <source file="server/MusicLibrary.o" lastModified="1706b8bb9b6"/>
+         <source file="server/MusicLibraryServer.o" lastModified="1709d279e69"/>
+      </target>
+   </processor>
+   <processor signature="gcc -L../../../../../../../usr/local/lib -lcurlpp -lstdc++ -lfltk -lfltk_images -lcurl -ljsoncpp -lpthread -ljsonrpccpp-client -ljsonrpccpp-common -lmicrohttpd">
+      <target file="musicRPCClient" lastModified="1709d27fb75">
+         <source file="../../../../../../../usr/local/lib/libcurlpp.a" lastModified="170177c7b98"/>
+         <source file="../../../../../../../usr/local/lib/libcurlpp.so.1.0.0" lastModified="170177c9308"/>
+         <source file="client/Album.o" lastModified="1706b93f536"/>
+         <source file="client/Track.o" lastModified="1706b93f8b2"/>
+         <source file="client/MusicBrowser.o" lastModified="1709d27f9c1"/>
+         <source file="client/MusicLibrary.o" lastModified="1706b940876"/>
+      </target>
+   </processor>
+</history>
