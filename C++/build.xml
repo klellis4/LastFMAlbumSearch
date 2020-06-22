@@ -1,0 +1,168 @@
+<project name="Ser321 Assign4 C++ Message GUI, sample build file."
+         default="targets" basedir="."
+         xmlns="antlib:org.apache.tools.ant">
+   <taskdef resource="cpptasks.tasks"/>
+   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+   <!--<property name="src" value="./src" />
+   <property name="lib" value="./lib" />
+   <property name="src.cpp.dir" value="src"/>
+   -->
+   <property name="src.dir" value="src"/>
+   
+
+   <property name="obj.dir" value="obj"/>
+   <property name="dist.dir" value="bin"/>
+   <property name="classes.dir" value="classes"/>
+   <property name="host" value="localhost"/>
+   <property name="port" value="1099"/>
+   <property name="lastfmkey" value="mylastfmkey"/>
+   <property name="json.file.name" value="MusicLibraryMethods.json"/>
+   <property name="userId" value="Kelly.Ellis"/>
+
+   <property environment="env"/>
+   <!--Set the ostype property: <property name="ostype" value="${env.OSTYPE}"/>-->
+    <condition property="ostype" value="${env.OSTYPE}">
+        <isset property="env.OSTYPE" />
+    </condition>
+    <condition property="ostype" value="env.OSTYPE_inaccessable">
+        <not>
+            <isset property="env.OSTYPE" />
+        </not>
+    </condition>
+
+    <!--Set the dyldpath property <var name="dyldpath" value="${env.DYLD_FALLBACK_LIBRARY_PATH}"/>-->
+    <condition property="dyldpath" value="${env.DYLD_FALLBACK_PATH}">
+        <isset property="env.DYLD_FALLBACK_PATH" />
+    </condition>
+    <condition property="dyldpath" value="env.DYLD_FALLBACK_PATH_inaccessible">
+        <not>
+            <isset property="env.DYLD_FALLBACK_PATH" />
+        </not>
+    </condition>
+
+   <target name="targets">
+     <echo message="targets are targets, clean, prepare, build.cpp.server, build.cpp.client, client, server"/>
+     <echo message="execute manually with: ./bin/guiSample"/>
+   </target>
+
+   <path id="compile.classpath">
+      <pathelement location="${dist.dir}"/>
+      <fileset dir="${basedir}/lib">
+         <include name="json.jar"/>
+      </fileset>
+   </path>
+
+   <target name="clean">
+     <delete dir="${classes.dir}" failonerror="false"/>
+     <!-- <delete dir="${obj.dir}" failonerror="false"/> -->
+     <delete dir="${dist.dir}" failonerror="false"/>
+     <delete file="${src.dir}/server/musiclibserverstub.h"
+             failonerror="false"/>
+     <delete file="${src.dir}/client/musiccollectionstub.h"
+             failonerror="false" />
+   </target>
+
+   <target name="prepare">
+      <!-- Create the time stamp -->
+      <tstamp/>
+      <!-- Create the build directory structure used by compile -->
+      <echo message="home defined as: ${env.HOME}" />
+
+      <!-- <mkdir dir="${classes.dir}"/> -->
+      <property name="includepath" value="usr/include,usr/local/include,usr/include/jsoncpp"/>
+
+      <mkdir dir="${dist.dir}" />
+      <mkdir dir="${dist.dir}/client" />
+      <mkdir dir="${dist.dir}/server" />
+      <if>
+         <isset property="env.USERNAME"/>
+         <then>
+           <echo message="detected username is: ${env.USERNAME}"/>
+          </then>
+      <elseif>
+         <isset property="env.USER"/>
+         <then>
+            <echo message="detected user is: ${env.USER}"/>
+          </then>
+      </elseif>
+      </if>
+      <echo message="host name is: ${os.name}"/>
+      <echo message="host arch is: ${os.arch}"/>
+      <echo message="host version is: ${os.version}"/>
+      <echo message="base directory is: ${basedir}"/>
+   </target>
+
+
+
+   <target name="generate.server.stub" depends="prepare">
+      <exec dir="${basedir}" executable="jsonrpcstub">
+         <arg line="${json.file.name} --cpp-server=musiclibserverstub"/>
+      </exec>
+      <copy file="musiclibserverstub.h"
+            tofile="${src.dir}/server/musiclibserverstub.h"/>
+      
+      <delete file="musiclibserverstub.h"/>
+      
+   </target>
+
+
+   <target name="build.cpp.server" depends="generate.server.stub">
+     <cc outtype="executable" subsystem="console"
+         outfile="${dist.dir}/musicRPCServer"
+         objdir="${dist.dir}/server">
+         <compiler name="g++"/>
+         <compilerarg value="-std=c++14"/>
+         <includepath>
+            <!-- <pathelement path="${includepath}"/> -->
+	    <dirset dir="/" includes="usr/include,usr/local/include,usr/include/jsoncpp"/>
+         </includepath>
+         <!--<libset dir="${server.lib.path}" libs="${server.lib.list}"/> -->
+	 <libset dir="/usr/local/lib" libs="curlpp,stdc++,curl,jsoncpp,pthread,jsonrpccpp-server,jsonrpccpp-common,microhttpd"/>
+         <!-- <libset dir="/usr/local/lib" libs="curlpp"/> -->
+         <fileset dir="${src.dir}/server"
+                  includes="Album.cpp, MusicLibrary.cpp, MusicLibraryServer.cpp, Track.cpp"/>
+      </cc>
+    </target>
+
+   <target name="server" depends="build.cpp.server">
+     <echo message="./bin/musicRPCServer ${port}"/>
+     <exec executable="./bin/musicRPCServer">
+       <arg line= "${port}"/>
+     </exec>
+   </target>
+
+   <target name="generate.client.stub" depends="prepare">
+      <exec dir="${basedir}" executable="jsonrpcstub">
+         <arg line="${json.file.name} --cpp-client=musiccollectionstub"/>
+      </exec>
+      <copy file="musiccollectionstub.h"
+	    tofile="${src.dir}/client/musiccollectionstub.h"/>
+      <delete file="musiccollectionstub.h"/>
+   </target>
+
+   <target name="build.cpp.client" depends="generate.client.stub">
+      <cc outtype="executable" subsystem="console"
+          outfile="${dist.dir}/musicRPCClient"
+          objdir="${dist.dir}/client">
+          <compiler name="g++" />
+          <compilerarg value="-std=c++14"/>
+          <includepath>
+             <dirset dir="/" includes="usr/include, usr/local/include, usr/include/jsoncpp" />
+          </includepath>
+          <libset dir="/usr/local/lib" libs="curlpp,stdc++,fltk,fltk_images,curl,jsoncpp,pthread,jsonrpccpp-client,jsonrpccpp-common,microhttpd"/>
+          <fileset dir="${src.dir}/client"
+		   includes="MediaClientGUI.cpp, MusicBrowser.cpp" />
+          <fileset dir="${src.dir}/server"
+		   includes="Album.cpp, Track.cpp, MusicLibrary.cpp" />
+   </cc>
+   </target>
+
+   <target name="client" depends="build.cpp.client">
+     <echo message="./bin/musicRPCClient ${host} ${port} ${userId} ${lastfmkey}" />
+     <exec executable="./bin/musicRPCClient">
+        <arg line = "${host} ${port} ${userId} ${lastfmkey}" />
+     </exec>
+   </target>
+
+</project>
